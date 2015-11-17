@@ -1,0 +1,12 @@
+---------------
+ Projet_Jeux
+---------------
+
+
+.. toctree::
+   :maxdepth: 2
+
+  player
+
+
+

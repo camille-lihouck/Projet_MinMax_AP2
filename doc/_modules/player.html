@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>player &mdash; Projet_Jeux 0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Projet_Jeux 0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Projet_Jeux 0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for player</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :author: Camille LIHOUCK</span>
+
+<span class="sd">    :date: 17 novembre 2015</span>
+
+<span class="sd">    This module defines a type player in order to play games</span>
+
+<span class="sd">    This module content:</span>
+
+<span class="sd">    * create(name,coins): create a new player </span>
+<span class="sd">    * get_name(player): get the name of a given player</span>
+<span class="sd">    * get_coins(player): get the coins of a given player</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="create"><a class="viewcode-back" href="../player.html#player.create">[docs]</a><span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">coins</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create a new player define by a name and a chosen type of coin</span>
+
+<span class="sd">    :param name: the players name</span>
+<span class="sd">    :type name: str</span>
+<span class="sd">    :param coins: the chosen coins</span>
+<span class="sd">    :type coins: str</span>
+<span class="sd">    :returns: a new player</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    :Example:</span>
+
+<span class="sd">    &gt;&gt;&gt; toto=create(&#39;toto&#39;,&#39;rouge&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; toto</span>
+<span class="sd">    {&#39;name&#39;: &#39;toto&#39;, &#39;coins&#39;: &#39;rouge&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="n">name</span> <span class="p">,</span> <span class="s">&quot;coins&quot;</span> <span class="p">:</span> <span class="n">coins</span><span class="p">}</span>
+</div>
+<div class="viewcode-block" id="get_name"><a class="viewcode-back" href="../player.html#player.get_name">[docs]</a><span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="n">player</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get the name of a given player</span>
+
+<span class="sd">    :param player: a player</span>
+<span class="sd">    :type player: player</span>
+<span class="sd">    :returns: the player name</span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    :Example:</span>
+
+<span class="sd">    &gt;&gt;&gt; toto=create(&#39;toto&#39;,&#39;rouge&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; get_name(toto)</span>
+<span class="sd">    &#39;toto&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">player</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="get_coins"><a class="viewcode-back" href="../player.html#player.get_coins">[docs]</a><span class="k">def</span> <span class="nf">get_coins</span><span class="p">(</span><span class="n">player</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get the coin used by given player</span>
+
+<span class="sd">    :param player: a player</span>
+<span class="sd">    :type player: player</span>
+<span class="sd">    :returns: the coins </span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    :Example:</span>
+
+<span class="sd">    &gt;&gt;&gt; toto=create(&#39;toto&#39;,&#39;rouge&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; get_coins(toto)</span>
+<span class="sd">    &#39;rouge&#39; </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">player</span><span class="p">[</span><span class="s">&#39;coins&#39;</span><span class="p">]</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo_FIL.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">Projet_Jeux 0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Camille LIHOUCK Meryem AGAYER Farah BOUCHAHDANE, FIL - IEEA - Univ-lille1.
+      Last updated on 17/11/2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
