@@ -14,6 +14,9 @@
 
 """
 
+_DEFAULT_HEIGHT = 3
+_DEFAULT_WIDTH = 3
+
 
 def initSituation(game):
     """builds the initial situation for the game. 
@@ -22,7 +25,20 @@ def initSituation(game):
     :type game: game
     :returns: *(situation)* the siutation at the beginning of the game
     """
-    raise NotImplementedError( "initSituation must be defined to return the initial game configuration" )
+    board=[]
+    if ('width' in game):
+        w=game['width']
+    else :
+        w=_DEFAULT_WIDTH
+    if ('height' in game):
+        h=game[height]
+    else :
+        h=_DEFAULT_HEIGHT
+    for i in range(w):
+        board.append([])
+        for j in range(h):
+            board.append('')
+    return board
 
 
 def isFinished(situation):
@@ -33,7 +49,7 @@ def isFinished(situation):
     :type situation: a game situation
     :returns: *(boolean)* -- True if the given situation ends the game
     """
-    raise NotImplementedError( "isFinished must be defined as a function to test end of game" )
+    return situation == board
 
 
 
@@ -49,7 +65,7 @@ def playerCanPlay(game, situation, player):
     :type player: player
     :returns: *(boolean)* -- True iff player can play in situation
     """
-    raise NotImplementedError( "playerCanPlay must be defined to determine whether player can play")
+    return True
 
 
 def nextSituations(game, situation, player):
@@ -64,7 +80,9 @@ def nextSituations(game, situation, player):
     :type player: player
     :returns: *(list<situtation>)* -- the list of situations that can be reached from given situation when player plays one round in the game
     """
-    raise NotImplementedError( "nextSituations must be defined as a function that provides successor situations" )
+    next = []
+    
+
 
 
 
@@ -82,19 +100,21 @@ def getWinner(game, situation, player):
 
     :CU: situation is a final situation
     """
-    raise NotImplementedError( "getWinner function must be defined to tell who win the game" )    
+      
+
 
 
 
 
 def displaySituation(situation):
     """
-    displays the situation
+    displays the situation, here the grid with 9 boxs of the game.
 
     :param situation: the situation to display
     :type situation: a game situation
     """
-    raise NotImplementedError( "displaySituation must be defined to display the situation on the screen" )
+    for i in range(3):
+        print('|_|_|_|')
 
 
 def humanPlayerPlays(game, player, situation):
@@ -109,5 +129,5 @@ def humanPlayerPlays(game, player, situation):
     :type situation: a game situation
     :returns: *(game situtation)* -- the game situation reached afte the human player play
     """
-    raise NotImplementedError( "humanPlayerPlays must be defined to make the human player plays one round, the reached new situation must be returned" )
+    
 
