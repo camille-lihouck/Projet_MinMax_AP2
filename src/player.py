@@ -10,8 +10,8 @@
     This module content:
 
     * create(name,coins): create a new player 
-    * get_name(player): get the name of a given player
-    * get_coins(player): get the coins of a given player
+    * name(player): get the name of a given player
+    * coins(player): get the coins of a given player
 """
 
 def create(name,coins):
@@ -32,7 +32,7 @@ def create(name,coins):
     """
     return {"name" : name , "coins" : coins}
 
-def get_name(player):
+def name(player):
     """
     get the name of a given player
 
@@ -43,12 +43,12 @@ def get_name(player):
     :Example:
 
     >>> toto=create('toto','rouge')
-    >>> get_name(toto)
+    >>> name(toto)
     'toto'
     """
     return player['name']
 
-def get_coins(player):
+def coins(player):
     """
     get the coin used by given player
 
@@ -59,7 +59,7 @@ def get_coins(player):
     :Example:
 
     >>> toto=create('toto','rouge')
-    >>> get_coins(toto)
+    >>> coins(toto)
     'rouge' 
     """
     return player['coins']
