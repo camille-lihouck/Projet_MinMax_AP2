@@ -21,18 +21,18 @@ def register_player():
     """
     """
     name= input ('Player name :')
-    coins = input ('Player coins:')
+    coins = input ('Player coins:')# list coins available with exception traitement
     return Player.create(name,coins)
 
 def play(game):
     """
     """
     game['player1']=register_player()
-    game['player2']=register_player()
+    game['player2']=register_player() # computer player???
     situation= Game.initSituation(game)
     turn_passed=0
     current_player=game['player1']
-    print(situation)
+    #print(situation)
     Game.displaySituation(situation)
     while not Game.isFinished(situation) and turn_passed<2:
         if Game.playerCanPlay(game, situation, current_player):

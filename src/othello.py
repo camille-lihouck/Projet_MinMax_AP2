@@ -47,13 +47,13 @@ def initSituation(game): # OK
         coins=DEFAULT_COINS
     situation={}                 
     for i in range (8):
-        situation[chr(i+ord('a'))]={}
+        situation['board'][chr(i+ord('a'))]={}
         for j in range (8):
-            situation[chr(i+ord('a'))][str(j+1)]= None
-    situation['e']['4']= coins['black']
-    situation['d']['5']= coins['black']
-    situation['d']['4']= coins['white']
-    situation['e']['5']= coins['white']
+            situation['board'][chr(i+ord('a'))][str(j+1)]= None
+    situation ['board']['e']['4']= coins['black']
+    situation ['board']['d']['5']= coins['black']
+    situation ['board']['d']['4']= coins['white']
+    situation ['board']['e']['5']= coins['white']
     return situation
 
             
@@ -66,9 +66,9 @@ def isFinished(situation): # Should be ok
     :type situation: a game situation
     :returns: *(boolean)* -- True if the given situation ends the game
     """
-    for column in situation:
-        for line in column:
-            if situation[column][line] == None:
+    for column in situation['board']:
+        for line in situation['board'][column]:
+            if situation['board'][column][line] == None:
                 return False
     return True
 
@@ -100,28 +100,16 @@ def nextSituations(game, situation, player): # Could be ok
     """
     next_situation=[]
     coins= Player.coins(player)
-    for colum in situation:
-        for line in colum:
-            if square['content']==coins:
+    for column in situation:
+        for line in situation['board'][column]:
+            if situation['board'][column][line]==coins:
                 for direction in DIRECTIONS:
-                    action = _action(colum,line,direction,player,situation)
+                    action = _action(column,line,direction,player,situation)
                     if action!=None:
                         new_situation= situation.copy
                         _play_action(action[0],action[1],DIRECTIONS[7-direction],player,new_situation)
                         next_situation.append(new_situation)
     return next_situation
-
-def _play_action(column, line, direction,player,situation): #Should be ok , may miss exception traitement for being used in HumanPlayerPlay
-    """
-    returns all coins from a started position given to the next coin of the same color in the given direction
-    :Side effect: situation is modify
-    """
-    coins = Player.coins(player)
-    new_column,new_line=_next_square(colum,line,direction)
-    if situation[new_column][new_line] != coins and situation[new_column][new_line] != None:
-        situation[new_column][new_line]= coins
-        _play_action(new_column,new_line,direction,player,situation)
-
 
 def _next_square(column,line,direction): #Should be ok
     """
@@ -139,10 +127,10 @@ def _action(colum,line,direction,player,situation): #Should be ok
     try :
         next_colum1,next_line1=_next_square(colum,line,direction)
         next_colum2,next_line2=_next_square(next_colum1,next_line1,direction)
-        if situation[next_colum1][next_line1] != coins and situation[next_colum1][next_line1] != None:
-            if situation[next_colum2][next_line2] == None:
+        if situation['board'][next_colum1][next_line1] != coins and situation['board'][next_colum1][next_line1] != None:
+            if situation['board'][next_colum2][next_line2] == None:
                 return (next_colum2,next_line2)
-            elif situation[next_colum2][next_line2]!=coins:
+            elif situation['board'][next_colum2][next_line2]!=coins:
                 return _next_square(next_colum1,next_colum2,direction,player,situation)
     except KeyError:
         pass
@@ -166,18 +154,18 @@ def getWinner(game, situation, player):
     black=0
     winner=None
     for column in situation:
-        for line in column:
-            if situation[column][line]=='o':
+        for line in situation['board'][column]:
+            if situation['board'][column][line]=='O':
                 white+=1
-            elif situation[column][line]=='x':
+            elif situation['board'][column][line]=='X':
                 black+=1
     if white>black:
-        if Player.coins(player)=='o':
+        if Player.coins(player)=='O':
             winner=player
         else:
             winner= 'other player' #Check how to get it , perhaps situation should be a dict with a key board and a key winner
     elif black>white:
-        if Player.coins(player)=='x':
+        if Player.coins(player)=='X':
             winner=player
         else:
             winner= 'other player' #Check how to get it
@@ -198,12 +186,24 @@ def displaySituation(situation):#OK work well
         print(separator2)
         print('{:s}|'.format(str(line+1)),end="" )
         for colum in range (8):
-            content=situation[chr(ord('a')+colum)][str(line+1)]
+            content=situation['board'][chr(ord('a')+colum)][str(line+1)]
             if content== None:
                 content=' '
             print(' {:s} |'.format(content),end='')
         print()
         print (separator3)
+
+def _play_action(column, line, direction,player,situation): #Should be ok , may miss exception traitement for being used in HumanPlayerPlay
+    """
+    returns all coins from a started position given to the next coin of the same color in the given direction
+    :Side effect: situation is modify
+    """
+    coins = Player.coins(player)
+    new_column,new_line=_next_square(colum,line,direction)
+    if situation['board'][new_column][new_line] != coins and situation[new_column][new_line] != None:
+        situation['board'][new_column][new_line]= coins
+        _play_action(new_column,new_line,direction,player,situation)
+
 
 def humanPlayerPlays(game, player, situation): #Don't work
     """
@@ -217,9 +217,12 @@ def humanPlayerPlays(game, player, situation): #Don't work
     :type situation: a game situation
     :returns: *(game situtation)* -- the game situation reached afte the human player play
     """
+        
 
 
 def _input_action(game, situation, player) :# on a good way
+    """
+    """
     print(Player.name(player)+"it's your turn to play")
     print('Enter a letter between a and h followed by a number between 1 and 8')
     action=input('Where do you want to put a coin?')
