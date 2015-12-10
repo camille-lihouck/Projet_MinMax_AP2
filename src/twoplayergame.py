@@ -14,8 +14,12 @@
 
 """
 
-import othello as Game
+
 import player as Player
+import tictactoe  as Game
+#import minmax
+#import othello
+#import nim_game  as Game
 
 def register_player():
     """
@@ -32,15 +36,14 @@ def play(game):
     situation= Game.initSituation(game)
     turn_passed=0
     current_player=game['player1']
-    #print(situation)
     Game.displaySituation(situation)
     while not Game.isFinished(situation) and turn_passed<2:
         if Game.playerCanPlay(game, situation, current_player):
             turn_passed=0
-            Game.displaySituation(situation)
             situation = Game.humanPlayerPlays(game,current_player,situation)
         else:
             turn_passed +=1
+        Game.displaySituation(situation)
         current_player = next_player(current_player,game)
     winner=Game.getWinner(game,situation,current_player)
     return winner

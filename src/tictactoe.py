@@ -16,7 +16,7 @@
 
 _DEFAULT_HEIGHT = 3
 _DEFAULT_WIDTH = 3
-
+import player as Player
 
 def initSituation(game):
     """builds the initial situation for the game. 
@@ -25,21 +25,8 @@ def initSituation(game):
     :type game: game
     :returns: *(situation)* the siutation at the beginning of the game
     """
-    board=[]
-    if ('width' in game):
-        w=game['width']
-    else :
-        w=_DEFAULT_WIDTH
-    if ('height' in game):
-        h=game[height]
-    else :
-        h=_DEFAULT_HEIGHT
-    for i in range(w):
-        board.append([])
-        for j in range(h):
-            board.append('')
-    return board
-
+    sit = [[' ' for x in range(3)] for y in range(3)]
+    return sit
 
 def isFinished(situation):
     """
@@ -49,7 +36,23 @@ def isFinished(situation):
     :type situation: a game situation
     :returns: *(boolean)* -- True if the given situation ends the game
     """
-    return situation == board
+    booleen = True
+    for i in range(3):
+        if situation[i][0] == situation[i][1] == situation[i][2] != '' :
+            return True
+        for j in range(3):
+            if i == 0:
+                if situation[i][j] == situation[i+1][j] == situation[i+2][j] != '' :
+                    return True
+                if j == 0 or j == 2 :
+                    if situation[i][j] == situation[i+1][abs(j-1)] == situation[i+2][abs(j-2)] != '':
+                        return True
+            if situation[i][j] == '':
+                booleen = False
+    if booleen == True:
+        return True
+    else:
+        return False
 
 
 
@@ -80,7 +83,19 @@ def nextSituations(game, situation, player):
     :type player: player
     :returns: *(list<situtation>)* -- the list of situations that can be reached from given situation when player plays one round in the game
     """
-    next = []
+    spec = Player.get_spec(player)
+    sits = []
+    for i in range(3):
+        for j in range(3):
+            if situation[i][j] == '':
+                sit = initSituation([])
+                for x in range(3):
+                    for y in range(3):
+                        sit[x][y]= situation[x][y]
+                sit[i][j] = spec
+                sits.append((sit,(i,j)))
+    return sits
+    
     
 
 
@@ -100,10 +115,19 @@ def getWinner(game, situation, player):
 
     :CU: situation is a final situation
     """
-      
-
-
-
+    spec = Player.get_spec(player)
+    for i in range(len(situation)):
+        if situation[i][0] == situation[i][1] == situation[i][2] == spec :
+            return player
+        if i == 0:
+            for j in range(3):
+                if situation[i][j] == situation[i+1][j] == situation[i+2][j] == spec :
+                    return player
+                if j == 0 or j == 2 :
+                    if situation[i][j] == situation[i+1][abs(j-1)] == situation[i+2][abs(j-2)] == spec :
+                        return player
+    return None
+            
 
 
 def displaySituation(situation):
@@ -114,7 +138,15 @@ def displaySituation(situation):
     :type situation: a game situation
     """
     for i in range(3):
-        print('|_|_|_|')
+        print('|', end ='')
+        for j in range(3):
+            if situation[i][j] == ' ':
+                print('_', end ='')
+            else:
+                print(situation[i][j], end= '')
+            print('|', end ='')
+        print()
+            
 
 
 def humanPlayerPlays(game, player, situation):
@@ -129,5 +161,34 @@ def humanPlayerPlays(game, player, situation):
     :type situation: a game situation
     :returns: *(game situtation)* -- the game situation reached afte the human player play
     """
+    x, y = inputcoords(situation, player)
+    coin = Player.coins(player)
+    situation[x][y] = coin
+    return situation
+
+
+def inputcoords(situation, player):
+    """
+    """
+    coords = input ('Coords? ')
+    coords = coords.split(',')
+    try :
+        x = int(coords[0])
+        y = int(coords[1])
+        if onboard(x, y) and situation[x][y] == " ":
+            return (x, y)
+    except:
+        inputcoords(situation, player)
+    return inputcoords(situation, player)
+
+
+
+
+def onboard(x, y):
+    """
+    """
+    return 0 <= x <= 3 and 0 <= y <= 3
+
+        
     
 
