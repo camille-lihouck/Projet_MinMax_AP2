@@ -50,7 +50,7 @@ def initSituation(game): # OK
     for i in range (8):
         situation['board'][chr(i+ord('a'))]={}
         for j in range (8):
-            situation['board'][chr(i+ord('a'))][str(j+1)]= None
+            situation['board'][chr(i+ord('a'))][str(j+1)]= ' '
     situation ['board']['e']['4']= coins['black']
     situation ['board']['d']['5']= coins['black']
     situation ['board']['d']['4']= coins['white']
@@ -69,10 +69,10 @@ def isFinished(situation): # Should be ok
     """
     for column in situation['board']:
         for line in situation['board'][column]:
-            if situation['board'][column][line] == None:
-                print('game finished') # to be errease
-                displaySituation(situation) # to be errease
+            if situation['board'][column][line] == ' ':
                 return False
+    print('game finished') # to be errease
+    displaySituation(situation) # to be errease
     return True
 
 def playerCanPlay(game, situation, player): # Should be ok
@@ -88,8 +88,8 @@ def playerCanPlay(game, situation, player): # Should be ok
     :returns: *(boolean)* -- True if player can play in situation
     """
     situation ['nextSituations']= nextSituations(game,situation,player)
-    print (situation['nextSituations'])
-    return nextSituations(game, situation, player) !=[]
+    print (situation['nextSituations']+ 'playerCanPlay')
+    return situation ['nextSituations'] !=[]
 
 def nextSituations(game, situation, player): # Could be ok
     """
@@ -105,15 +105,19 @@ def nextSituations(game, situation, player): # Could be ok
     """
     nextSituation=[]
     coins = Player.coins(player)
+    print (situation['board'])
     for column in situation['board']:
         for line in situation['board'][column]:
             if situation['board'][column][line]==coins:
+                square=situation['board'][column][line]
                 for direction in DIRECTIONS:
                     action = _action(column,line,DIRECTIONS[direction],player,situation)
                     if action!=None:
                         newSituation= situation.copy
                         _play_action(action[0],action[1],(-1*DIRECTIONS[direction][0],-1*DIRECTIONS[direction][1]),player,newSituation)
+                        print(newSituation)
                         nextSituation.append(newSituation)
+    print(nextSituation)
     return nextSituation
 
 def _next_square(column,line,direction): #Should be ok
@@ -122,22 +126,25 @@ def _next_square(column,line,direction): #Should be ok
     """
     new_column= chr(ord(column)+direction[0])
     new_line= str(int(line)+direction[1])
+    print(new_column +','+new_line+ 'in _next_square')
     return (new_column,new_line)
 
-def _action(colum,line,direction,player,situation): #Should be ok
+def _action(column,line,direction,player,situation): #Should be ok
     """
     give the coordinate of the square in whitch you can play in the given direction is this square exist, otherwise, returns None
     """
     coins = Player.coins(player)
     try :
-        next_colum1,next_line1=_next_square(colum,line,direction)
-        next_colum2,next_line2=_next_square(next_colum1,next_line1,direction)
-        if situation['board'][next_colum1][next_line1] != coins and situation['board'][next_colum1][next_line1] != None:
-            if situation['board'][next_colum2][next_line2] == None:
+        next_column1,next_line1=_next_square(column,line,direction)
+        next_column2,next_line2=_next_square(next_column1,next_line1,direction)
+        if situation['board'][next_column1][next_line1] != coins and situation['board'][next_column1][next_line1] != ' ':
+            if situation['board'][next_column2][next_line2] == ' ':
+                print(next_column2 +' '+next_line2 + ' in _action') 
                 return (next_colum2,next_line2)
             elif situation['board'][next_colum2][next_line2]!=coins:
                 return _next_square(next_colum1,next_colum2,direction,player,situation)
     except KeyError:
+        print ('key error in _action')##
         pass
     return None
 
@@ -155,6 +162,7 @@ def getWinner(game, situation, player):
 
     :CU: situation is a final situation
     """
+    print('getWinner called')
     white=0
     black=0
     winner=None
