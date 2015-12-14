@@ -265,7 +265,7 @@ def _input_action(game, situation, player) :# on a good way
     return _input_action(game, situation, player)
 
 
-def evalFunction(situation, player):
+def evalFunction(situation, player,game):
     """
     the evaluation function for the min-max algorithm. It evaluates the given situation, the evaluation function increases with the quality of the situation for the player
          
@@ -276,7 +276,7 @@ def evalFunction(situation, player):
     :returns: *(number)* -- the score of the given situation for the given player.
         The better the situation for the minmax player, the higher the score. The opposite for human player.
     """
-    coins=Player.coins(player)
+    coins=game['coins'][Player.coins(player)]
     coeff= _square_coeff()
     value = 0
     for column in range(8):

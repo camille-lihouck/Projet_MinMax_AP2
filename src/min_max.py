@@ -32,7 +32,7 @@ def changePlayer(player,game):
     else:
         return game['player1']
 
-def minMaxFinal(situation,player,game):
+def minMaxFinal(situation,player,game):#a MAJ
     name=game['name']
     if name == 'othello':
         import othello as Game
@@ -46,9 +46,9 @@ def minMaxFinal(situation,player,game):
     else:
         next_situation=Game.nextSituations(game, situation, player)
         if Player.name(player)==COMPUTER_NAME:
-            return max(minMaxFinal(sit,next_player,game) for sit in next_situation)
+            return (max(minMaxFinal(sit,next_player,game) for sit in next_situation), sit)
         else:
-            return min(minMaxFinal(sit,next_player,game) for sit in next_situation)
+            return(min(minMaxFinal(sit,next_player,game) for sit in next_situation),sit)
 
 
 def minMax(situation,player,game,depth):
@@ -59,13 +59,25 @@ def minMax(situation,player,game,depth):
         import tictactoe as Game
     elif name =='nim_game':
         import nim_game as Game
+    if Player.name(player)==COMPUTER_NAME:
+        coeff=1
+    else:
+        coeff=-1
     next_player=changePlayer(player,game)
     if Game.isFinished(situation) or depth==0:
-        print (Game.evalFunction(situation,player),situation)
-        return (Game.evalFunction(situation,player),situation)
+        print(Game.evalFunction(situation,player,game)*coeff)
+        return Game.evalFunction(situation,player,game)*coeff,situation
     else:
         next_situation=Game.nextSituations(game, situation, player)
+        res=None
         if Player.name(player)==COMPUTER_NAME:
-            return (max(minMax(sit,next_player,game,depth -1)[0] for sit in next_situation)
+            for sit in next_situation:
+                temp =minMax(sit,next_player,game,depth-1)
+                if res==None or res[0]<temp[0]:
+                   res=temp
         else:
-            return (min(minMax(sit,next_player,game,depth -1)[0] for sit in next_situation)
+            for sit in next_situation:
+                temp =minMax(sit,next_player,game,depth-1)
+                if res==None or res[0]>temp[0]:
+                    res=temp
+        return res[0],sit
