@@ -65,7 +65,8 @@ def minMax(situation,player,game,depth):
         coeff=-1
     next_player=changePlayer(player,game)
     if Game.isFinished(situation) or depth==0:
-        print(Game.evalFunction(situation,player,game)*coeff)
+        #décomenter pour vérifier le résultat de la fonction d'évaluation
+        #print(Game.evalFunction(situation,player,game)*coeff) 
         return Game.evalFunction(situation,player,game)*coeff,situation
     else:
         next_situation=Game.nextSituations(game, situation, player)
