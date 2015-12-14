@@ -18,7 +18,7 @@ _DEFAULT_HEIGHT = 3
 _DEFAULT_WIDTH = 3
 import player as Player
 
-def initSituation(game):
+def initSituation(game):#gestion des pions pour graphique
     """builds the initial situation for the game. 
 
     :param game: the game for which the initial situation is created
@@ -28,7 +28,7 @@ def initSituation(game):
     sit = [[' ' for x in range(3)] for y in range(3)]
     return sit
 
-def isFinished(situation):
+def isFinished(situation):#trés lourd et faux
     """
     tells if the game is finished when in given situation
 
@@ -38,22 +38,18 @@ def isFinished(situation):
     """
     booleen = True
     for i in range(3):
-        if situation[i][0] == situation[i][1] == situation[i][2] != '' :
+        if situation[i][0] == situation[i][1] == situation[i][2] != ' ' :
             return True
         for j in range(3):
             if i == 0:
-                if situation[i][j] == situation[i+1][j] == situation[i+2][j] != '' :
+                if situation[i][j] == situation[i+1][j] == situation[i+2][j] != ' ' :
                     return True
                 if j == 0 or j == 2 :
-                    if situation[i][j] == situation[i+1][abs(j-1)] == situation[i+2][abs(j-2)] != '':
+                    if situation[i][j] == situation[i+1][abs(j-1)] == situation[i+2][abs(j-2)] != ' ':
                         return True
-            if situation[i][j] == '':
+            if situation[i][j] == ' ':
                 booleen = False
-    if booleen == True:
-        return True
-    else:
-        return False
-
+    return booleen
 
 
 def playerCanPlay(game, situation, player):
@@ -83,7 +79,7 @@ def nextSituations(game, situation, player):
     :type player: player
     :returns: *(list<situtation>)* -- the list of situations that can be reached from given situation when player plays one round in the game
     """
-    spec = Player.get_spec(player)
+    spec = Player.coins(player)
     sits = []
     for i in range(3):
         for j in range(3):
@@ -115,7 +111,7 @@ def getWinner(game, situation, player):
 
     :CU: situation is a final situation
     """
-    spec = Player.get_spec(player)
+    spec = Player.coins(player)
     for i in range(len(situation)):
         if situation[i][0] == situation[i][1] == situation[i][2] == spec :
             return player
@@ -170,7 +166,7 @@ def humanPlayerPlays(game, player, situation):
 def inputcoords(situation, player):
     """
     """
-    coords = input ('Coords? ')
+    coords = input ('Coords? x,y ')
     coords = coords.split(',')
     try :
         x = int(coords[0])
@@ -178,7 +174,7 @@ def inputcoords(situation, player):
         if onboard(x, y) and situation[x][y] == " ":
             return (x, y)
     except:
-        inputcoords(situation, player)
+        pass#inputcoords(situation, player)#inutile est traité par le retour final et manque le return
     return inputcoords(situation, player)
 
 

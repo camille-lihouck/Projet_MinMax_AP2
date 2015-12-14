@@ -36,13 +36,13 @@ def play(name):
     while not Game.isFinished(situation) and turn_passed<2:
         if Game.playerCanPlay(game, situation, current_player):
             turn_passed=0
-            if Player.name(current_player)!='computer':
+            if Player.name(current_player)!='minMAX':
                 situation = Game.humanPlayerPlays(game,current_player,situation)
             else:
                 situation = minmax.main(game,current_player,situation)
+            Game.displaySituation(situation)
         else:
             turn_passed +=1
-        Game.displaySituation(situation)
         current_player = next_player(current_player,game)
     winner=Game.getWinner(game,situation,current_player)
     return winner

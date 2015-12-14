@@ -109,6 +109,7 @@ def nextSituations(game, situation, player): # Could be ok
                 for direction in DIRECTIONS:
                     _possible_action(column,line,DIRECTIONS[direction],player,new_situation,game)
                 if new_situation!=situation:
+                    new_situation[column][line]=coins
                     next_situation.append(new_situation)
     return next_situation
 
@@ -145,6 +146,7 @@ def _possible_action(colum,line,direction,player,situation,game): #OK
             elif situation[next_colum2][next_line2]!=coins:
                 res=_possible_action(next_colum1,next_line1,direction,player,situation,game)
                 if res!=None:
+                    situation[next_colum1][next_line1]=coins
                     situation[colum][line]=coins
                 return res
     except IndexError:
@@ -241,6 +243,7 @@ def _input_action(game, situation, player) :# on a good way
     print('Enter a letter between a and h followed by a number between 1 and 8')
     action=input('Where do you want to play? ')
     try:
+        coins=game['coins'][Player.coins(player)]
         assert len(action)==2
         column= ord(action[0])-ord('a')
         line = int(action[1])-1
@@ -251,7 +254,9 @@ def _input_action(game, situation, player) :# on a good way
             for direction in DIRECTIONS:
                 _possible_action(column,line,DIRECTIONS[direction],player,new_situation,game)
         if new_situation!=situation:
-            return new_situation
+            new_situation[column][line]=coins
+            situation = new_situation
+            return situation
     except AssertionError:
         pass
     except ValueError:
