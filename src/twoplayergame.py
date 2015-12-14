@@ -13,32 +13,53 @@
 """
 
 
-import player as Player
-import tictactoe 
-import minmax
-import othello as Game
-import nim_game
+import player as Player 
+import min_max as minmax
 
 LIST_GAME=['othello','nim_game','tic_tac_toe']
 
-def play(g):
+def play(name):
     """
     """
-    game = init_game(g)
+    assert name in LIST_GAME, 'g must be in LIST_GAME'
+    if name=='othello':
+        import othello as Game
+    elif name=='tic_tac_toe':
+        import tictactoe as Game
+    elif name=='nim_game':
+        import nim_game as Game
+    game = init_game(name)
     situation= Game.initSituation(game)
     turn_passed=0
-    current_player=game['player1']
+    current_player=first_player(game)
     Game.displaySituation(situation)
     while not Game.isFinished(situation) and turn_passed<2:
         if Game.playerCanPlay(game, situation, current_player):
             turn_passed=0
-            situation = Game.humanPlayerPlays(game,current_player,situation)
+            if Player.name(current_player)!='computer':
+                situation = Game.humanPlayerPlays(game,current_player,situation)
+            else:
+                situation = minmax.main(game,current_player,situation)
         else:
             turn_passed +=1
         Game.displaySituation(situation)
         current_player = next_player(current_player,game)
     winner=Game.getWinner(game,situation,current_player)
     return winner
+
+def first_player(game):
+    """
+    get the first player to play
+    """
+    name=game['name']
+    if name == 'othello':
+        color= Player.coins(game['player1'])
+        if color == 'black':
+            return game['player1']
+        else:
+            return game['player2']
+    else:
+        return game['player1']
 
 def next_player(current_player, game):
     """
@@ -50,27 +71,41 @@ def next_player(current_player, game):
     return next_player
 
 
-def init_game(game):
+def init_game(name):
     """
     Initialize the game
+
+    :param game: the game you want to play
+    :type game: str
+    :returns: the games setup
+    :rtype: dict
     """
-    assert game in LIST_GAME, 'game must be in list game'
-    g={}
+    game={}
+    game['name']=name
     list_coin=None
-    if game =='othello':
+    if name =='othello':
         list_coin=['black','white']
-    elif game =='tic_tac_toe':
+    elif name =='tic_tac_toe':
         list_coin=['X','O']
-    g['player1']=register_player(list_coin)
+    game['player1']=register_player(list_coin)
     player2= two_players()
+    game['IA_level']= None
     if player2:
-        g['player2']=register_player(list_coin)
+        game['player2']=register_player(list_coin)
     else:
-        g['player2']=Player.create('computer',list_coin[0])
+        game['player2']=Player.create('minMAX',list_coin[0])
+        game['IA_level']=set_difficulty()
     # allow the player to choose wether he play on terminal on with graphical board
-    return g
+    return game
     
-        
+def set_difficulty():
+    """
+    """
+    difficulty= input('What IA level do you want? (1 is for begineer)')
+    try:
+        return int(difficulty)
+    except ValueError:
+        return set_difficulty()
         
 def two_players():
     """
@@ -84,7 +119,8 @@ def two_players():
     else:
         print('Uncorrect answer')
         return two_players()
-    
+
+
 def register_player(list_coin):
     """
     register a human player
@@ -93,7 +129,7 @@ def register_player(list_coin):
     :returns: a new player
     :rtype: player
     """
-    name= input ('Player name :')
+    name= choose_name()
     if list_coin == None:
         coins = None
     elif len(list_coin)==1:
@@ -102,7 +138,18 @@ def register_player(list_coin):
         coins=choose_coins(list_coin)
     return Player.create(name,coins)
 
-
+def choose_name():
+    """
+    allow player to choose their name
+    :returns: the chosen name
+    :rtype: str
+    """
+    name= input ('Player name :')
+    if name=='minMAX':
+        print('The name"minMAX" is not available')
+        return choose_name()
+    return name
+    
 def choose_coins(list_coin):
     """
     allow a human player to choose the coins he want to used in the list given

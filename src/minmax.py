@@ -5,7 +5,7 @@ import player as Player
 def Mini(situation,comp ,player):
     """
     """
-    mini = 1000
+    #mini = 1000
     if Game.isFinished(situation):
         return Game.evalFunction(situation,comp)
     else:
@@ -19,7 +19,7 @@ def Mini(situation,comp ,player):
 def Maxi (situation, comp ,player):
     """
     """
-    maxi = -1000
+   # maxi = -1000
     if Game.isFinished(situation):
         return Game.evalFunction(situation,player)
     else:

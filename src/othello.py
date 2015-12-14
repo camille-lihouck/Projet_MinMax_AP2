@@ -43,16 +43,15 @@ def initSituation(game): # OK
     """
     if not 'coins' in game:
         game['coins']=DEFAULT_COINS
-    situation={}
-    situation['board']=[]                
+    situation=[]                
     for i in range (8):
-        situation['board'].append([])
+        situation.append([])
         for j in range (8):
-            situation['board'][i].append (None)
-    situation ['board'][4][3]= game['coins']['black']
-    situation ['board'][3][4]= game['coins']['black']
-    situation ['board'][3][3]= game['coins']['white']
-    situation ['board'][4][4]= game['coins']['white']
+            situation[i].append (None)
+    situation[4][3]= game['coins']['black']
+    situation[3][4]= game['coins']['black']
+    situation[3][3]= game['coins']['white']
+    situation[4][4]= game['coins']['white']
     return situation
 
             
@@ -67,7 +66,7 @@ def isFinished(situation): #OK
     """
     for column in range (8):
         for line in range(8):
-            if situation['board'][column][line] == None:
+            if situation[column][line] == None:
                 return False
     return True
 
@@ -83,8 +82,8 @@ def playerCanPlay(game, situation, player): # Should be ok
     :type player: player
     :returns: *(boolean)* -- True if player can play in situation
     """
-    situation['next_situation']=nextSituations(game,situation,player)
-    return situation['next_situation'] !=[]
+    next_situation=nextSituations(game,situation,player)
+    return next_situation !=[]
 
 def nextSituations(game, situation, player): # Could be ok
     """
@@ -102,16 +101,14 @@ def nextSituations(game, situation, player): # Could be ok
     coins= game['coins'][Player.coins(player)]
     for column in range (8):
         for line in range(8):
-            if situation['board'][column][line]==None:
-                new_situation={}
-                new_situation['board']=[]
+            if situation[column][line]==None:
+                new_situation=[]
                 for i in range (8):
-                    new_situation['board'].append([])
-                    new_situation['board'][i]= situation['board'][i].copy()
+                    new_situation.append([])
+                    new_situation[i]= situation[i].copy()
                 for direction in DIRECTIONS:
                     _possible_action(column,line,DIRECTIONS[direction],player,new_situation,game)
-                if new_situation['board']!=situation['board']:
-                    new_situation['square']=(column,line)
+                if new_situation!=situation:
                     next_situation.append(new_situation)
     return next_situation
 
@@ -132,19 +129,27 @@ def _possible_action(colum,line,direction,player,situation,game): #OK
     """
     coins = game['coins'][Player.coins(player)]
     try :
+        assert colum>=0 and colum<=7
+        assert line>=0 and line<=7
         next_colum1,next_line1=_next_square(colum,line,direction)
-        if (situation['board'][next_colum1][next_line1] != coins) and (situation['board'][next_colum1][next_line1] != None):
+        assert next_colum1>=0 and next_colum1<=7
+        assert next_line1>=0 and next_colum1<=7
+        if (situation[next_colum1][next_line1] != coins) and (situation[next_colum1][next_line1] != None):
             next_colum2,next_line2=_next_square(next_colum1,next_line1,direction)
-            if situation['board'][next_colum2][next_line2] == coins:
-                situation['board'][next_colum1][next_line1]=coins
-                situation['board'][colum][line]=coins
+            assert next_colum2>=0 and next_colum2<=7
+            assert next_line2>=0 and next_line2<=7
+            if situation[next_colum2][next_line2] == coins:
+                situation[next_colum1][next_line1]=coins
+                situation[colum][line]=coins
                 return (colum,line)
-            elif situation['board'][next_colum2][next_line2]!=coins:
+            elif situation[next_colum2][next_line2]!=coins:
                 res=_possible_action(next_colum1,next_line1,direction,player,situation,game)
                 if res!=None:
-                    situation['board'][colum][line]=coins
+                    situation[colum][line]=coins
                 return res
     except IndexError:
+        pass
+    except AssertionError:
         pass
     return None
 
@@ -168,9 +173,9 @@ def getWinner(game, situation, player):#should be ok
     winner=None
     for column in range(8):
         for line in range (8):
-            if situation['board'][column][line]==game['coins']['white']:
+            if situation[column][line]==game['coins']['white']:
                 white+=1
-            elif situation['board'][column][line]==game['coins']['black']:
+            elif situation[column][line]==game['coins']['black']:
                 black+=1
     if white>black:
         if Player.coins(player)=='white':
@@ -197,14 +202,13 @@ def displaySituation(situation):#OK work well
     :param situation: the situation to display
     :type situation: a game situation
     """
-    print(situation)
     print('   a   b   c   d   e   f   g   h  ')
     print(separator1)
     for line in range (8):
         print(separator2)
         print('{:s}|'.format(str(line+1)),end="" )
         for column in range (8):
-            content=situation['board'][column][line]
+            content=situation[column][line]
             if content== None:
                 content=' '
             print(' {:s} |'.format(content),end='')
@@ -223,12 +227,11 @@ def humanPlayerPlays(game, player, situation): #Don't work
     :type situation: a game situation
     :returns: *(game situtation)* -- the game situation reached afte the human player play
     """
-    situation_number=_input_action(game,situation,player)
-    situation['board']=[]
+    next_situation=_input_action(game,situation,player)
+    situation=[]
     for i in range(8):
-        situation['board'].append([])
-        situation['board'][i]=situation['next_situation'][situation_number]['board'][i].copy()
-    situation['next_situation']=[]
+        situation.append([])
+        situation[i]=next_situation[i].copy()
     return situation
 
 def _input_action(game, situation, player) :# on a good way
@@ -241,14 +244,55 @@ def _input_action(game, situation, player) :# on a good way
         assert len(action)==2
         column= ord(action[0])-ord('a')
         line = int(action[1])-1
-        possible= False
-        for i in range (len(situation['next_situation'])):
-            if (column,line)==situation['next_situation'][i]['square']:
-                possible=True
-                situation_number=i
-        if possible:
-            return situation_number
+        new_situation=[]
+        for i in range (8):
+            new_situation.append([])
+            new_situation[i]= situation[i].copy()
+            for direction in DIRECTIONS:
+                _possible_action(column,line,DIRECTIONS[direction],player,new_situation,game)
+        if new_situation!=situation:
+            return new_situation
     except AssertionError:
+        pass
+    except ValueError:
         pass
     print('unauthorised action')
     return _input_action(game, situation, player)
+
+
+def evalFunction(situation, player):
+    """
+    the evaluation function for the min-max algorithm. It evaluates the given situation, the evaluation function increases with the quality of the situation for the player
+         
+    :param situation: the current situation
+    :type situation: a game situation
+    :param player: the current player
+    :type player: player
+    :returns: *(number)* -- the score of the given situation for the given player.
+        The better the situation for the minmax player, the higher the score. The opposite for human player.
+    """
+    coins=Player.coins(player)
+    coeff= _square_coeff()
+    value = 0
+    for column in range(8):
+        for line in range(8):
+            if situation[column][line]==coins:
+                value+=coeff[column][line]
+            elif situation[column][line]!=None:
+                value-=coeff[column][line]
+    return value
+
+def _square_coeff():#OK
+    """
+    attribute a weight to each square according to its strategic weight
+    """
+    coeff=[]
+    for column in range(8):
+        coeff.append([])
+        for line in range(8):
+            coeff[column].append(1)
+            if column==0 or column==7:
+                coeff[column][line]*=4
+            if line==0 or line ==7:
+                coeff[column][line]*=4
+    return coeff
