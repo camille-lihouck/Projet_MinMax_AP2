@@ -276,15 +276,26 @@ def evalFunction(situation, player,game):
     :returns: *(number)* -- the score of the given situation for the given player.
         The better the situation for the minmax player, the higher the score. The opposite for human player.
     """
+    win= 1000
+    loose = -1000
+    turn_pass=-200
     coins=game['coins'][Player.coins(player)]
     coeff= _square_coeff()
     value = 0
-    for column in range(8):
-        for line in range(8):
-            if situation[column][line]==coins:
-                value+=coeff[column][line]
-            elif situation[column][line]!=None:
-                value-=coeff[column][line]
+    if isFinished(situation):
+        if getWinner(game,situation,player)== player:
+            value=win
+        else:
+            value=loose
+    elif not playerCanPlay(game,situation,player):
+        value= turn_pass
+    else:
+        for column in range(8):
+            for line in range(8):
+                if situation[column][line]==coins:
+                    value+=coeff[column][line]
+                elif situation[column][line]!=None:
+                    value-=coeff[column][line]
     return value
 
 def _square_coeff():#OK

@@ -83,14 +83,14 @@ def nextSituations(game, situation, player):
     :type player: player
     :returns: *(list<situtation>)* -- the list of situations that can be reached from given situation when player plays one round in the game
     """
-    next = []
+    result =[]
     if situation >= 3:
         # taking 3 pebbles is possible
         result.append(situation-3)
     if situation >= 2:
         # taking 2 pebbles is possible
         result.append(situation-2)
-    return next
+    return result
 
 
 
@@ -125,9 +125,12 @@ def evalFunction(situation, player):
     :param player: the current player
     :type player: player
     :returns: *(number)* -- the score of the given situation for the given player.
-        The better the situation for the minmax player, the higher the score. The opposite for human player.
+        The better the situation for the current player, the higher the score.
     """
-    raise NotImplementedError( "evalFunction must be defined as an evaluation function" )
+    value=0
+    if isFinished(situation) and situation!=1:
+        value=1
+    return value
 
 
 

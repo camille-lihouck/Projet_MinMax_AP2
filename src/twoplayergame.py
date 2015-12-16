@@ -39,13 +39,19 @@ def play(name):
             if Player.name(current_player)!='minMAX':
                 situation = Game.humanPlayerPlays(game,current_player,situation)
             else:
+                print("computer's playing")
                 situation = minmax.main(game,current_player,situation)
             Game.displaySituation(situation)
         else:
             turn_passed +=1
         current_player = next_player(current_player,game)
     winner=Game.getWinner(game,situation,current_player)
-    return winner
+    if winner == None:
+        print("It's a draw")
+    elif Player.name(winner)!="minMAX":
+        print("Well done {:s} you win".format(Player.name(winner)))
+    else:
+        print("Sorry, you loose")
 
 def first_player(game):
     """
@@ -93,8 +99,14 @@ def init_game(name):
     if player2:
         game['player2']=register_player(list_coin)
     else:
-        game['player2']=Player.create('minMAX',list_coin[0])
-        game['IA_level']=set_difficulty()
+        if list_coin==None:
+            game['player2']=Player.create('minMAX',None)
+        else:
+            game['player2']=Player.create('minMAX',list_coin[0])
+        if name == 'othello':
+            game['IA_level']=set_difficulty()
+        else:
+            game['IA_level']=None
     # allow the player to choose wether he play on terminal on with graphical board
     return game
     
@@ -145,9 +157,9 @@ def choose_name():
     :rtype: str
     """
     name= input ('Player name :')
-    if name=='minMAX':
-        print('The name"minMAX" is not available')
-        return choose_name()
+    #if name=='minMAX':
+        #print('The name"minMAX" is not available')
+        #return choose_name()
     return name
     
 def choose_coins(list_coin):

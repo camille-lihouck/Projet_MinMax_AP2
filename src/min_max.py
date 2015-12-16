@@ -32,7 +32,7 @@ def changePlayer(player,game):
     else:
         return game['player1']
 
-def minMaxFinal(situation,player,game):#a MAJ
+def minMaxFinal(situation,player,game):
     name=game['name']
     if name == 'othello':
         import othello as Game
@@ -45,11 +45,21 @@ def minMaxFinal(situation,player,game):#a MAJ
         return (Game.evalFunction(situation,player),situation)
     else:
         next_situation=Game.nextSituations(game, situation, player)
+        res=None
         if Player.name(player)==COMPUTER_NAME:
-            return (max(minMaxFinal(sit,next_player,game) for sit in next_situation), sit)
+            for sit in next_situation:
+                temp =minMaxFinal(sit,next_player,game)
+                if res==None or temp!=None and res[0]<temp[0]:
+                   res=temp
         else:
-            return(min(minMaxFinal(sit,next_player,game) for sit in next_situation),sit)
-
+            for sit in next_situation:
+                temp =minMaxFinal(sit,next_player,game)
+                if res==None or temp!=None and res[0]>temp[0]:
+                    res=temp
+        try:
+            return res[0],sit
+        except:
+            pass
 
 def minMax(situation,player,game,depth):
     name=game['name']
@@ -74,11 +84,14 @@ def minMax(situation,player,game,depth):
         if Player.name(player)==COMPUTER_NAME:
             for sit in next_situation:
                 temp =minMax(sit,next_player,game,depth-1)
-                if res==None or res[0]<temp[0]:
+                if res==None or temp!=None and res[0]<temp[0]:
                    res=temp
         else:
             for sit in next_situation:
                 temp =minMax(sit,next_player,game,depth-1)
-                if res==None or res[0]>temp[0]:
+                if res==None or temp!=None and res[0]>temp[0]:
                     res=temp
-        return res[0],sit
+        try:
+            return res[0],sit
+        except:
+            print (res)
