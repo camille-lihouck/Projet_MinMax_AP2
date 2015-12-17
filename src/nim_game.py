@@ -116,7 +116,7 @@ def getWinner(game, situation, player):
         # other player took last pebble, player wins
         return player
 
-def evalFunction(situation, player):
+def evalFunction(situation, player,game):
     """
     the evaluation function for the min-max algorithm. It evaluates the given situation, the evaluation function increases with the quality of the situation for the player
          
